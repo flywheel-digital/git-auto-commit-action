@@ -48,7 +48,7 @@ _main() {
 
             _tag_commit
 
-            _push_to_github
+            _retry_backoff _push_to_github
         else
             _set_github_output "changes_detected" "false"
 
@@ -189,6 +189,26 @@ _push_to_github() {
         _log "debug" "Push commit to remote branch $INPUT_BRANCH";
         git push --set-upstream origin "HEAD:$INPUT_BRANCH" --follow-tags --atomic ${INPUT_PUSH_OPTIONS:+"${INPUT_PUSH_OPTIONS_ARRAY[@]}"};
     fi
+}
+
+_retry_backoff() {
+  local n=1
+  local max=5
+  local delay=5
+
+  while true; do
+    "$@" && break || {
+      if [[ $n -lt $max ]]; then
+        echo "⚠️ Attempt $n/$max failed! Retrying in $delay seconds..."
+        sleep $delay
+        ((n++))
+        delay=$((delay * 2))  # Exponential backoff
+      else
+        echo "❌ All $max attempts failed!"
+        return 1
+      fi
+    }
+  done
 }
 
 _main
