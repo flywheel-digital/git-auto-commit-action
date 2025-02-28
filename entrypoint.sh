@@ -82,8 +82,8 @@ _git_is_dirty() {
     echo "INPUT_FILE_PATTERN: ${INPUT_FILE_PATTERN}";
     read -r -a INPUT_FILE_PATTERN_EXPANDED <<< "$INPUT_FILE_PATTERN";
 
-    # capture stderr
-    gitStatusMessage="$((git status -s $INPUT_STATUS_OPTIONS -- ${INPUT_FILE_PATTERN_EXPANDED:+${INPUT_FILE_PATTERN_EXPANDED[@]}} >/dev/null ) 2>&1)";
+    # capture std
+    gitStatusMessage="$(git status -s $INPUT_STATUS_OPTIONS -- ${INPUT_FILE_PATTERN_EXPANDED:+${INPUT_FILE_PATTERN_EXPANDED[@]}} 2>&1)";
     # shellcheck disable=SC2086
     gitStatus="$(git status -s $INPUT_STATUS_OPTIONS -- ${INPUT_FILE_PATTERN_EXPANDED:+${INPUT_FILE_PATTERN_EXPANDED[@]}})";
     if [ $? -ne 0 ]; then
