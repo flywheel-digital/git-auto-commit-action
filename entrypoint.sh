@@ -165,12 +165,16 @@ _tag_commit() {
 _push_to_github() {
 
     echo "INPUT_PUSH_OPTIONS: ${INPUT_PUSH_OPTIONS}";
+    echo "INPUT_COMMIT_USER_NAME: ${INPUT_COMMIT_USER_NAME}";
+    echo "INPUT_COMMIT_USER_EMAIL: ${INPUT_COMMIT_USER_EMAIL}";
     _log "debug" "Apply push options ${INPUT_PUSH_OPTIONS}";
 
     # shellcheck disable=SC2206
     INPUT_PUSH_OPTIONS_ARRAY=( $INPUT_PUSH_OPTIONS );
 
     # Pull before pusing
+    git config --global user.email "$INPUT_COMMIT_USER_EMAIL"
+    git config --global user.name "$INPUT_COMMIT_USER_NAME"
     git pull --rebase origin
 
     if [ -z "$INPUT_BRANCH" ]
