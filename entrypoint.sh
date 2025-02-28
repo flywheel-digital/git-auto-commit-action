@@ -170,6 +170,9 @@ _push_to_github() {
     # shellcheck disable=SC2206
     INPUT_PUSH_OPTIONS_ARRAY=( $INPUT_PUSH_OPTIONS );
 
+    # Pull before pusing
+    git pull --rebase origin
+
     if [ -z "$INPUT_BRANCH" ]
     then
         # Only add `--tags` option, if `$INPUT_TAGGING_MESSAGE` is set
